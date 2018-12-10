@@ -18,28 +18,28 @@ def parse(lines):
 
        yield Vector(Point(*position), Point(*velocity))
 
-def simulate(points):
-    for point in points:
-        yield Vector(Point(point.position.x + point.velocity.x,
-                           point.position.y + point.velocity.y),
-                     Point(*point.velocity))
+def simulate(vectors):
+    for vector in vectors:
+        yield Vector(Point(vector.position.x + vector.velocity.x,
+                           vector.position.y + vector.velocity.y),
+                     Point(*vector.velocity))
 
-def corners(points):
-    tl = Point(min([point.position.x for point in points]),
-               min([point.position.y for point in points]))
+def corners(vectors):
+    tl = Point(min([vector.position.x for vector in vectors]),
+               min([vector.position.y for vector in vectors]))
 
-    br = Point(max([point.position.x for point in points]),
-               max([point.position.y for point in points]))
+    br = Point(max([vector.position.x for vector in vectors]),
+               max([vector.position.y for vector in vectors]))
 
     return tl, br
 
-def area(points):
-    tl, br = corners(points)
+def area(vectors):
+    tl, br = corners(vectors)
     return (br.x - tl.x) * (br.y - tl.y)
 
-def pretty_print(points):
-    tl, br = corners(points)
-    coords = [x.position for x in points]
+def pretty_print(vectors):
+    tl, br = corners(vectors)
+    coords = [x.position for x in vectors]
 
     for y in range(tl.y, br.y+1):
         for x in range(tl.x, br.x+1):
@@ -50,21 +50,21 @@ def pretty_print(points):
         sys.stdout.write('\n')
 
 def solve(lines):
-    points = list(parse(lines))
-    a = area(points)
+    vectors = list(parse(lines))
+    a = area(vectors)
     t = 0
 
     while(True):
 
-        new_points = list(simulate(points))
-        new_a = area(new_points)
+        new_vectors = list(simulate(vectors))
+        new_a = area(new_vectors)
 
         if new_a > a:
-            pretty_print(points)
+            pretty_print(vectors)
             return t
 
         else:
-            points = new_points
+            vectors = new_vectors
             a = new_a
 
         t += 1
